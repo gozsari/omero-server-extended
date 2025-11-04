@@ -8,5 +8,11 @@ RUN dnf -y install epel-release && \
 # remove any baked-in TLS materials; provide at runtime instead
 RUN rm -f /OMERO/certs/*.key /OMERO/certs/*.crt || true
 
+# upgrade setuptools to address Trivy python-pkg CVEs
+RUN dnf -y install python3-pip && \
+    python3 -m pip install --no-cache-dir --upgrade pip && \
+    python3 -m pip install --no-cache-dir "setuptools>=78.1.1" && \
+    python3 -m pip cache purge || true
+
 COPY --chown=omero-server:omero-server scripts/ /omero/
 USER omero-server
