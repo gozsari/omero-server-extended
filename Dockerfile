@@ -1,8 +1,9 @@
 FROM openmicroscopy/omero-server:5.6.16
 
 USER root
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      jq curl ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN dnf -y install epel-release && \
+    dnf -y install jq curl ca-certificates && \
+    dnf -y clean all && rm -rf /var/cache
 
 COPY --chown=omero-server:omero-server scripts/ /omero/
 USER omero-server
