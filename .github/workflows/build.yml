@@ -44,6 +44,7 @@ jobs:
         with:
           scan-type: image
           image-ref: ${{ env.IMAGE }}:${{ github.sha }}
+          scanners: vuln
           format: table
           exit-code: 1
           vuln-type: 'os,library'
