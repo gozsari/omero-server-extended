@@ -1,5 +1,4 @@
 FROM openmicroscopy/omero-server:5.6.16
-ENV OMERO_DIST=/opt/omero/server/OMERO.server
 
 USER root
 
@@ -13,6 +12,6 @@ RUN . /opt/omero/server/venv3/bin/activate && \
 
 
 USER omero-server
-COPY --chown=omero-server:omero-server scripts/ /omero/
+COPY --chown=omero-server:omero-server scripts/  /opt/omero/server/OMERO.server/lib/scripts/omero/
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
