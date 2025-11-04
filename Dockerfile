@@ -1,18 +1,18 @@
 FROM openmicroscopy/omero-server:5.6.16
+ENV OMERO_DIST=/opt/omero/server/OMERO.server
 
 USER root
+
 RUN dnf -y install epel-release && \
     dnf -y install jq curl-minimal ca-certificates && \
     dnf -y clean all && rm -rf /var/cache
 
-# remove any baked-in TLS materials; provide at runtime instead
-RUN rm -f /OMERO/certs/*.key /OMERO/certs/*.crt || true
+RUN . /opt/omero/server/venv3/bin/activate && \
+    pip install --no-cache-dir omero-metadata
 
-# upgrade setuptools to address Trivy python-pkg CVEs
-RUN dnf -y install python3-pip && \
-    python3 -m pip install --no-cache-dir --upgrade pip && \
-    python3 -m pip install --no-cache-dir "setuptools>=78.1.1" && \
-    python3 -m pip cache purge || true
 
-COPY --chown=omero-server:omero-server scripts/ /omero/
+
 USER omero-server
+COPY --chown=omero-server:omero-server scripts/ /omero/
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
